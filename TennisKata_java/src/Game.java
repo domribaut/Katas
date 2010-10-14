@@ -9,15 +9,26 @@ public class Game {
     }
 
     public String score() {
-        if (isEquality())
-            return String.format("%s a", getScore(player1Scored));
-
-        return String.format("%s %s", getScore(player1Scored), getScore(player2Scored));
-
+        return isEquality() ?
+                getScoreForEquality()
+                : getBothScores();
+//        almost the same but shitty readability
+//        return String.format("%s %s",
+//                getScore(player1Scored),
+//                (isEquality() ? "a" : getScore(player2Scored)));
+  
     }
 
     private boolean isEquality() {
         return player1Scored == player2Scored;
+    }
+
+    private String getScoreForEquality() {
+        return String.format("%s a", getScore(player1Scored));
+    }
+
+    private String getBothScores() {
+        return String.format("%s %s", getScore(player1Scored), getScore(player2Scored));
     }
 
     private String getScore(int scored) {
