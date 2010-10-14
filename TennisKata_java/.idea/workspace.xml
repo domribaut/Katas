@@ -4,7 +4,6 @@
     <list default="true" readonly="true" id="65ca4f03-c796-4bc2-8c69-eeab3898c9bf" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Game.java" afterPath="$PROJECT_DIR$/src/Game.java" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameTest.java" afterPath="$PROJECT_DIR$/src/GameTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TennisKata_java.iml" />
     </list>
@@ -85,7 +84,7 @@
       <file leaf-file-name="Game.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Game.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="10" selection-start="306" selection-end="306" vertical-scroll-proportion="0.21915285">
+            <state line="18" column="1" selection-start="496" selection-end="496" vertical-scroll-proportion="0.5635359">
               <folding />
             </state>
           </provider>
@@ -597,7 +596,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Game.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="10" selection-start="306" selection-end="306" vertical-scroll-proportion="0.21915285">
+        <state line="18" column="1" selection-start="496" selection-end="496" vertical-scroll-proportion="0.5635359">
           <folding />
         </state>
       </provider>

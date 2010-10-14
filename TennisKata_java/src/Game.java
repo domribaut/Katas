@@ -16,7 +16,6 @@ public class Game {
 //        return String.format("%s %s",
 //                getScore(player1Scored),
 //                (isEquality() ? "a" : getScore(player2Scored)));
-  
     }
 
     private boolean isEquality() {
