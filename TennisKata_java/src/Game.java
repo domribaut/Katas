@@ -12,10 +12,10 @@ public class Game {
         return isEquality() ?
                 getScoreForEquality()
                 : getBothScores();
-//        almost the same but shitty readability
-//        return String.format("%s %s",
-//                getScore(player1Scored),
-//                (isEquality() ? "a" : getScore(player2Scored)));
+//    almost the same but shitty readability
+//    return String.format("%s %s",
+//            getScore(player1Scored),
+//            (isEquality() ? "a" : getScore(player2Scored)));
     }
 
     private boolean isEquality() {
