@@ -9,13 +9,40 @@ public class Game {
     }
 
     public String score() {
+
+        if (isOnePlayerWins())
+            return getWinner();
+        if (isInitialGame())
+            return getScoreForInitialGame();
+
+        return getScoreForExtendedGame();
+    }
+
+    private String getScoreForExtendedGame() {
+        if (isEquality())
+            return "equality";
+        
+        int advantagePlayer = player1Scored > player2Scored ? 1 : 2;
+        return "advantage player " + advantagePlayer;
+    }
+
+    private boolean isInitialGame() {
+        return player1Scored <= 3 && player2Scored <= 3;
+    }
+
+    private String getScoreForInitialGame() {
         return isEquality() ?
                 getScoreForEquality()
                 : getBothScores();
-//    almost the same but shitty readability
-//    return String.format("%s %s",
-//            getScore(player1Scored),
-//            (isEquality() ? "a" : getScore(player2Scored)));
+    }
+
+    private boolean isOnePlayerWins() {
+        return Math.max(player1Scored, player2Scored) > 3 && Math.abs(player1Scored - player2Scored) >= 2;
+    }
+
+    private String getWinner() {
+        int winner = player1Scored > player2Scored ? 1 : 2;
+        return String.format("player %d wins", winner);
     }
 
     private boolean isEquality() {
@@ -51,10 +78,17 @@ public class Game {
     }
 
     public void player1Scores() {
+        ThrowIfExistsWinner();
         player1Scored++;
     }
 
     public void player2Scores() {
+        ThrowIfExistsWinner();
         player2Scored++;
+    }
+
+    private void ThrowIfExistsWinner() {
+        if (isOnePlayerWins())
+            throw new TennisException("Player can't score when there is a winner.");
     }
 }
