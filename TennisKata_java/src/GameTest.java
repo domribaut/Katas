@@ -1,10 +1,10 @@
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 
 public class GameTest extends TestCase {
 
     Game game;
+    Score score = this.new Score();
 
     @Override
     protected void setUp() throws Exception {
@@ -12,45 +12,45 @@ public class GameTest extends TestCase {
     }
 
     public void testNewGameHasScore_love_A() throws Exception {
-        assertEquals("love a", game.score());
+        score.ShouldEquals("love a");
     }
 
     public void testBothPlayersScoreOnceThenScoreIs_15_a() throws Exception {
         bothPlayerScore(1);
-        Assert.assertEquals("15 a", game.score());
+        score.ShouldEquals("15 a");
     }
 
     public void testBothPlayersScoreTwiceThenScoreIs_30_a() throws Exception {
         bothPlayerScore(2);
-        Assert.assertEquals("30 a", game.score());
+        score.ShouldEquals("30 a");
     }
 
     public void testBothPlayersScore3timesThenScoreIs_40_a() throws Exception {
         bothPlayerScore(3);
-        Assert.assertEquals("40 a", game.score());
+        assertEquals("40 a", game.score());
     }
 
     public void testPlayer1ScoresOnceThenScoreIs_15_love() throws Exception {
         game.player1Scores();
-        Assert.assertEquals("15 love", game.score());
+        assertEquals("15 love", game.score());
     }
 
     public void testPlayer2ScoresOnceThenScoreIs_love_15() throws Exception {
         game.player2Scores();
-        Assert.assertEquals("love 15", game.score());
+        assertEquals("love 15", game.score());
     }
 
     public void testPlayer1ScoresTwiceThenScoreIs_30_love() throws Exception {
         game.player1Scores();
         game.player1Scores();
-        Assert.assertEquals("30 love", game.score());
+        assertEquals("30 love", game.score());
     }
 
     public void testPlayer1Scores3TimesThenScoreIs_40_love() throws Exception {
         game.player1Scores();
         game.player1Scores();
         game.player1Scores();
-        Assert.assertEquals("40 love", game.score());
+        assertEquals("40 love", game.score());
     }
 
     public void testPlayer1WinsInitialGamesThenScoreIs_Player_1_wins() throws Exception {
@@ -58,7 +58,7 @@ public class GameTest extends TestCase {
         game.player1Scores();
         game.player1Scores();
         game.player1Scores();
-        Assert.assertEquals("player 1 wins", game.score());
+        assertEquals("player 1 wins", game.score());
     }
 
     public void testPlayer2WinsInitialGamesThenScoreIs_Player_2_wins() throws Exception {
@@ -66,7 +66,7 @@ public class GameTest extends TestCase {
         game.player2Scores();
         game.player2Scores();
         game.player2Scores();
-        Assert.assertEquals("player 2 wins", game.score());
+        assertEquals("player 2 wins", game.score());
     }
 
     public void testPlayer1CannotScoreGivenTheirIsAWinner() {
@@ -118,4 +118,11 @@ public class GameTest extends TestCase {
             game.player2Scores();
         }
     }
+
+    private class Score {
+        public void ShouldEquals(String expected) {
+            assertEquals(expected, game.score());
+        }
+    }
+
 }
