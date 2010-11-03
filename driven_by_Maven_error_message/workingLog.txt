@@ -1,0 +1,268 @@
+Todo replace c:\dev\katas\Maven_by_error by <path>
+
+-- Error message Driven Development --
+
+--- Maven ---
+Prerequisite is that both Java JDK and Maven are installed and on the path. It can be test by checking maven version.
+A part of the output on my machine:
+  $ mvn --version
+  Apache Maven 3.0 (r1004208; 2010-10-04 13:50:56+0200)
+  Java version: 1.6.0_22
+  Java home: c:\Program Files\Java\jdk1.6.0_22\jre
+
+---- Creating the project ----
+we need a directory to host our project
+  mkdir hello && cd hello
+  
+Now Let's try to run Maven to see what we get
+    $ mvn
+    [INFO] Scanning for projects...
+    [INFO] ------------------------------------------------------------------------
+    [INFO] BUILD FAILURE
+    [INFO] ------------------------------------------------------------------------
+    [INFO] Total time: 0.171s
+    [INFO] Finished at: Wed Nov 03 22:59:43 CET 2010
+    [INFO] Final Memory: 3M/54M
+    [INFO] ------------------------------------------------------------------------
+    [ERROR] No goals have been specified for this build. You must specify a valid lifecycle phase or a goal in the format <plugin-prefix>:<goal> or <plugin-group-id
+    >:<plugin-artifact-id>[:<plugin-version>]:<goal>. Available lifecycle phases are: validate, initialize, generate-sources, process-sources, generate-resources, p
+    rocess-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-
+    test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy, pre-site, site, post-site,
+     site-deploy, pre-clean, clean, post-clean. -> [Help 1]
+    [ERROR]
+    [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+    [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+    [ERROR]
+    [ERROR] For more information about the errors and possible solutions, please read the following articles:
+    [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/NoGoalSpecifiedException
+  
+Good! It looks like we need a goal or a lifecycle to execute. We can try to start by cleaning our project
+    $ mvn clean
+    [INFO] Scanning for projects...
+    [INFO] ------------------------------------------------------------------------
+    [INFO] BUILD FAILURE
+    [INFO] ------------------------------------------------------------------------
+    [INFO] Total time: 0.166s
+    [INFO] Finished at: Wed Nov 03 22:25:35 CET 2010
+    [INFO] Final Memory: 3M/54M
+    [INFO] ------------------------------------------------------------------------
+    [ERROR] The goal you specified requires a project to execute but there is no POM in this directory (<path>\hello). Please verify you invoked Maven from the correct directory. -> [Help 1]
+    [ERROR]
+    [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+    [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+    [ERROR]
+    [ERROR] For more information about the errors and possible solutions, please read the following articles:
+    [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MissingProjectException
+
+The relevant part is that there is no POM in the directory, so let create one. and rerun Maven
+    $ touch pom.xml
+    $ mvn clean
+    [INFO] Scanning for projects...
+    [ERROR] The build could not read 1 project -> [Help 1]
+    [ERROR]
+    [ERROR]   The project  (c:\dev\katas\Maven_by_error\hello\pom.xml) has 1 error
+    [ERROR]     Non-readable POM c:\dev\katas\Maven_by_error\hello\pom.xml: input contained no data
+    [ERROR]
+    [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+    [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+    [ERROR]
+    [ERROR] For more information about the errors and possible solutions, please read the following articles:
+    [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/ProjectBuildingException
+	
+So now we need to put some input in our file. we got a link to the relevant help page but we will try first to use the debug switch -X but can't find relevant informatin without reading the offendig code. So let's go for the help page.
+Reading http://cwiki.apache.org/confluence/display/MAVEN/ProjectBuildingException send us to the POM documentation at http://maven.apache.org/pom.html
+
+I see that there is the root element, the basic elements, the build settings and some more elements. Let start with just the "header" part by inserting in the POM
+   $ cat>>pom.xml
+   <project xmlns="http://maven.apache.org/POM/4.0.0"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+   </project>
+  
+  Running Clean give us a good hint of what to do next.
+    $ mvn clean
+    [INFO] Scanning for projects...
+    [ERROR] The build could not read 1 project -> [Help 1]
+    [ERROR]
+    [ERROR]   The project [unknown-group-id]:[unknown-artifact-id]:[unknown-version] (c:\dev\katas\Maven_by_error\hello\pom.xml) has 3 errors
+    [ERROR]     'groupId' is missing. @ line 4, column 68
+    [ERROR]     'artifactId' is missing. @ line 4, column 68
+    [ERROR]     'version' is missing. @ line 4, column 68
+    [ERROR]
+    [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+    [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+    [ERROR]
+    [ERROR] For more information about the errors and possible solutions, please read the following articles:
+    [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/ProjectBuildingException
+So let's put some more elements. empty elements won't cut it, believe me I tried. Let's try with hopefully meaningsful values
+    <groupId>hello</groupId>
+	<artifactId>hello</artifactId>
+	<version>0.0.1</version>
+and now We can build successfuly, Hurray!
+     $ mvn clean
+     [INFO] Scanning for projects...
+     [INFO]
+     [INFO] ------------------------------------------------------------------------
+     [INFO] Building hello 0.0.1
+     [INFO] ------------------------------------------------------------------------
+     [INFO]
+     [INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ hello ---
+     [INFO] ------------------------------------------------------------------------
+     [INFO] BUILD SUCCESS
+     [INFO] ------------------------------------------------------------------------
+     [INFO] Total time: 0.482s
+     [INFO] Finished at: Wed Nov 03 22:52:46 CET 2010
+     [INFO] Final Memory: 3M/53M
+     [INFO] ------------------------------------------------------------------------
+
+Now That it is clean we can try to install
+    $ mvn install
+    [INFO] Scanning for projects...
+    [INFO]
+    [INFO] ------------------------------------------------------------------------
+    [INFO] Building hello 0.0.1
+    [INFO] ------------------------------------------------------------------------
+    [INFO]
+    [INFO] --- maven-resources-plugin:2.4.3:resources (default-resources) @ hello ---
+ !   [WARNING] Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+ !   [INFO] skip non existing resourceDirectory c:\dev\katas\Maven_by_error\hello\src\main\resources
+    [INFO]
+    [INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ hello ---
+ !   [INFO] No sources to compile
+    [INFO]
+ !   [INFO] --- maven-resources-plugin:2.4.3:testResources (default-testResources) @ hello ---
+ !   [WARNING] Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+ !   [INFO] skip non existing resourceDirectory c:\dev\katas\Maven_by_error\hello\src\test\resources
+    [INFO]
+    [INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ hello ---
+    [INFO] No sources to compile
+    [INFO]
+    [INFO] --- maven-surefire-plugin:2.5:test (default-test) @ hello ---
+    [INFO] No tests to run.
+    [INFO]
+    [INFO] --- maven-jar-plugin:2.3.1:jar (default-jar) @ hello ---
+    [WARNING] JAR will be empty - no content was marked for inclusion!
+    [INFO] Building jar: c:\dev\katas\Maven_by_error\hello\target\hello-0.0.1.jar
+    [INFO]
+    [INFO] --- maven-install-plugin:2.3.1:install (default-install) @ hello ---
+    [INFO] Installing c:\dev\katas\Maven_by_error\hello\target\hello-0.0.1.jar to C:\Users\dom\.m2\repository\1\hello\0.0.1\hello-0.0.1.jar
+    [INFO] Installing c:\dev\katas\Maven_by_error\hello\pom.xml to C:\Users\dom\.m2\repository\1\hello\0.0.1\hello-0.0.1.pom
+    [INFO] ------------------------------------------------------------------------
+    [INFO] BUILD SUCCESS
+    [INFO] ------------------------------------------------------------------------
+    [INFO] Total time: 1.908s
+    [INFO] Finished at: Wed Nov 03 23:25:30 CET 2010
+    [INFO] Final Memory: 7M/73M
+    [INFO] ------------------------------------------------------------------------
+	 
+Let fix the problems, begining with the easy one, the missing directories
+$ mkdir -p src/main/resources src/test/resources
+Let's check what happens now
+     $ mvn install
+     [INFO] Scanning for projects...
+     [INFO]
+     [INFO] ------------------------------------------------------------------------
+     [INFO] Building hello 0.0.1
+     [INFO] ------------------------------------------------------------------------
+     [INFO]
+     [INFO] --- maven-resources-plugin:2.4.3:resources (default-resources) @ hello ---
+     [WARNING] Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+     [INFO] Copying 0 resource
+     [INFO]
+     [INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ hello ---
+     [INFO] No sources to compile
+     [INFO]
+     [INFO] --- maven-resources-plugin:2.4.3:testResources (default-testResources) @ hello ---
+     [WARNING] Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+     [INFO] Copying 0 resource
+     [INFO]
+     [INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ hello ---
+     [INFO] No sources to compile
+     [INFO]
+     [INFO] --- maven-surefire-plugin:2.5:test (default-test) @ hello ---
+     Downloading: http://repo1.maven.org/maven2/org/apache/maven/surefire/surefire-junit/2.5/surefire-junit-2.5.pom
+     Downloaded: http://repo1.maven.org/maven2/org/apache/maven/surefire/surefire-junit/2.5/surefire-junit-2.5.pom (2 KB at 1.0 KB/sec)
+     Downloading: http://repo1.maven.org/maven2/org/apache/maven/surefire/surefire-junit/2.5/surefire-junit-2.5.jar
+     Downloaded: http://repo1.maven.org/maven2/org/apache/maven/surefire/surefire-junit/2.5/surefire-junit-2.5.jar (16 KB at 13.3 KB/sec)
+     [INFO] Surefire report directory: c:\dev\katas\Maven_by_error\hello\target\surefire-reports
+     
+     -------------------------------------------------------
+      T E S T S
+     -------------------------------------------------------
+     There are no tests to run.
+     
+     Results :
+     
+     Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+     
+     [INFO]
+     [INFO] --- maven-jar-plugin:2.3.1:jar (default-jar) @ hello ---
+     [INFO] Building jar: c:\dev\katas\Maven_by_error\hello\target\hello-0.0.1.jar
+     [INFO]
+     [INFO] --- maven-install-plugin:2.3.1:install (default-install) @ hello ---
+     [INFO] Installing c:\dev\katas\Maven_by_error\hello\target\hello-0.0.1.jar to C:\Users\dom\.m2\repository\1\hello\0.0.1\hello-0.0.1.jar
+     [INFO] Installing c:\dev\katas\Maven_by_error\hello\pom.xml to C:\Users\dom\.m2\repository\1\hello\0.0.1\hello-0.0.1.pom
+     [INFO] ------------------------------------------------------------------------
+     [INFO] BUILD SUCCESS
+     [INFO] ------------------------------------------------------------------------
+     [INFO] Total time: 5.839s
+     [INFO] Finished at: Wed Nov 03 23:41:44 CET 2010
+     [INFO] Final Memory: 7M/85M
+     [INFO] ------------------------------------------------------------------------
+Woot! all tests passed and I can see Maven downloading required dependencies.
+In order to fix the warning about encoding I google [WARNING] Using platform encoding maven and the frst response looks like a good answer from the Maven FAQ.
+I insert the following inside the project node
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+and rerun install
+now we are ready to add some some code wich means starting by adding a test.
+--- Testing ---
+There is no hint in the message from Maven but the file will be compiled if it is in a java directory under src/test/
+The file is compiled but there is still no test to run so let use JUnit to write a test that check the infrastructure
+    import org.junit.Test;
+    import static org.junit.Assert.assertTrue;
+    
+    public class TestHello{
+      
+        @Test
+    	public void shouldPassWhenTestingInfrastructure(){
+    	    assertTrue("Test checking infrastructure", true);
+    	}
+    }
+The compilation fail because JUnit package does not exists. There is not much help to get from the error message but we can find the solution in the pom help page. (at http://maven.apache.org/pom.html#Dependencies)
+now we can add our first dependency to the project node.
+   <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.0</version>
+      <type>jar</type>
+      <scope>test</scope>
+      <optional>true</optional>
+    </dependency>
+   </dependencies>
+ 
+ Now the test pass and the compilation succeed  (short version)
+  $ mvn install
+  [INFO] ------------------------------------------------------------------------
+  [INFO] Building hello 0.0.1
+  [INFO] ------------------------------------------------------------------------
+  [INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ hello ---
+  [INFO] Compiling 1 source file to c:\dev\katas\Maven_by_error\hello\target\test-classes
+  
+  -------------------------------------------------------
+   T E S T S
+  -------------------------------------------------------
+  Running TestHello
+  Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 sec
+  
+  Results :
+  Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+  
+  [INFO] ------------------------------------------------------------------------
+  [INFO] BUILD SUCCESS
+  [INFO] ------------------------------------------------------------------------
+  
